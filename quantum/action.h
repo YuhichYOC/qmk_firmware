@@ -153,37 +153,6 @@ typedef struct _action_processor {
     bool oneshot_tap_toggle;
 #endif
 
-    void (* act_mods)(struct _action_processor *);
-    void (* act_mods_tap_oneshot)(struct _action_processor *);
-    void (* act_mods_tap_toggle)(struct _action_processor *);
-    void (* act_mods_tap_default)(struct _action_processor *);
-    void (* act_usage_system)(struct _action_processor *);
-    void (* act_usage_consumer)(struct _action_processor *);
-    void (* act_mousekey)(struct _action_processor *);
-    void (* act_layer_bitop_on)(struct _action_processor *);
-    void (* act_layer_bitop_other)(struct _action_processor *);
-    void (* act_layer_mods)(struct _action_processor *);
-    void (* act_layer_tap_or_tap_ext_toggle)(struct _action_processor *);
-    void (* act_layer_tap_or_tap_ext_on_off)(struct _action_processor *);
-    void (* act_layer_tap_or_tap_ext_off_on)(struct _action_processor *);
-    void (* act_layer_tap_or_tap_ext_set_clear)(struct _action_processor *);
-    void (* act_layer_tap_or_tap_ext_oneshot)(struct _action_processor *);
-    void (* act_layer_tap_or_tap_ext_default)(struct _action_processor *);
-    void (* act_macro)(struct _action_processor *);
-    void (* act_swap_hands_toggle)(struct _action_processor *);
-    void (* act_swap_hands_on_off)(struct _action_processor *);
-    void (* act_swap_hands_off_on)(struct _action_processor *);
-    void (* act_swap_hands_on)(struct _action_processor *);
-    void (* act_swap_hands_off)(struct _action_processor *);
-    void (* act_swap_hands_oneshot)(struct _action_processor *);
-    void (* act_swap_hands_tap_toggle)(struct _action_processor *);
-    void (* act_swap_hands_default)(struct _action_processor *);
-    void (* act_function)(struct _action_processor *);
-    void (* layer_led)(struct _action_processor *);
-    void (* retro_tapping)(struct _action_processor *);
-    void (* oneshot_swaphands)(struct _action_processor *);
-    void (* release_oneshot)(struct _action_processor *);
-
     void (* debug_print)(char *);
     void (* wait_ms)(int);
 

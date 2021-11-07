@@ -247,15 +247,15 @@ void register_button(bool pressed, enum mouse_buttons button) {
 void ap_act_mods(action_processor * ap) {
     if (ap->action->kind.id != ACT_LMODS && ap->action->kind.id != ACT_RMODS) return;
     if (ap->record->event.pressed) {
-        if (ap.mods) {
+        if (ap->mods) {
             if (IS_MOD(ap->action->key.code) || ap->action->key.code == KC_NO) {
                 // e.g. LSFT(KC_LGUI): we don't want the LSFT to be weak as it would make it useless.
                 // This also makes LSFT(KC_LGUI) behave exactly the same as LGUI(KC_LSFT).
                 // Same applies for some keys like KC_MEH which are declared as MEH(KC_NO).
-                add_mods(ap.mods);
+                add_mods(ap->mods);
             }
             else {
-                add_weak_mods(ap.mods);
+                add_weak_mods(ap->mods);
             }
             send_keyboard_report();
         }
@@ -263,12 +263,12 @@ void ap_act_mods(action_processor * ap) {
     }
     else {
         unregister_code(ap->action->key.code);
-        if (ap.mods) {
+        if (ap->mods) {
             if (IS_MOD(ap->action->key.code) || ap->action->key.code == KC_NO) {
-                del_mods(ap.mods);
+                del_mods(ap->mods);
             }
             else {
-                del_weak_mods(ap.mods);
+                del_weak_mods(ap->mods);
             }
             send_keyboard_report();
         }
@@ -287,41 +287,41 @@ void ap_act_mods_tap_oneshot(action_processor * ap) {
     if (ap->record->event.pressed) {
         if (ap->record->tap.count == 0) {
             ap->debug_print("MODS_TAP: Oneshot: 0\n");
-            register_mods(ap.mods | get_oneshot_mods());
+            register_mods(ap->mods | get_oneshot_mods());
         }
         else if (ap->record->tap.count == 1) {
             ap->debug_print("MODS_TAP: Oneshot: start\n");
-            set_oneshot_mods(ap.mods | get_oneshot_mods());
+            set_oneshot_mods(ap->mods | get_oneshot_mods());
         }
-        else if (ap.oneshot_tap_toggle && ap->record->tap.count == ONESHOT_TAP_TOGGLE) {
+        else if (ap->oneshot_tap_toggle && ap->record->tap.count == ONESHOT_TAP_TOGGLE) {
             ap->debug_print("MODS_TAP: Toggling oneshot");
             clear_oneshot_mods();
-            set_oneshot_locked_mods(ap.mods);
-            register_mods(ap.mods);
+            set_oneshot_locked_mods(ap->mods);
+            register_mods(ap->mods);
         }
         else {
-            register_mods(ap.mods | get_oneshot_mods());
+            register_mods(ap->mods | get_oneshot_mods());
         }
     }
     else {
         if (ap->record->tap.count == 0) {
             clear_oneshot_mods();
-            unregister_mods(ap.mods);
+            unregister_mods(ap->mods);
         }
         else if (ap->record->tap.count == 1) {
             // Retain Oneshot mods
-            if (ap.oneshot_tap_toggle && (ap.mods & get_mods())) {
+            if (ap->oneshot_tap_toggle && (ap->mods & get_mods())) {
                 clear_oneshot_locked_mods();
                 clear_oneshot_mods();
-                unregister_mods(ap.mods);
+                unregister_mods(ap->mods);
             }
         }
-        else if (ap.oneshot_tap_toggle && ap->record->tap.count == ONESHOT_TAP_TOGGLE) {
+        else if (ap->oneshot_tap_toggle && ap->record->tap.count == ONESHOT_TAP_TOGGLE) {
             // Toggle Oneshot Layer
         }
         else {
             clear_oneshot_mods();
-            unregister_mods(ap.mods);
+            unregister_mods(ap->mods);
         }
     }
 #else
@@ -331,27 +331,27 @@ void ap_act_mods_tap_oneshot(action_processor * ap) {
     if (ap->record->event.pressed) {
         if (ap->record->tap.count == 0) {
             ap->debug_print("MODS_TAP: Oneshot: 0\n");
-            register_mods(ap.mods | get_oneshot_mods());
+            register_mods(ap->mods | get_oneshot_mods());
         }
         else if (ap->record->tap.count == 1) {
             ap->debug_print("MODS_TAP: Oneshot: start\n");
-            set_oneshot_mods(ap.mods | get_oneshot_mods());
+            set_oneshot_mods(ap->mods | get_oneshot_mods());
         }
         else {
-            register_mods(ap.mods | get_oneshot_mods());
+            register_mods(ap->mods | get_oneshot_mods());
         }
     }
     else {
         if (ap->record->tap.count == 0) {
             clear_oneshot_mods();
-            unregister_mods(ap.mods);
+            unregister_mods(ap->mods);
         }
         else if (ap->record->tap.count == 1) {
             // Retain Oneshot mods
         }
         else {
             clear_oneshot_mods();
-            unregister_mods(ap.mods);
+            unregister_mods(ap->mods);
         }
     }
 #endif
@@ -365,12 +365,12 @@ void ap_act_mods_tap_toggle(action_processor * ap) {
     if (ap->action->layer_tap.code != MODS_TAP_TOGGLE) return;
     if (ap->record->event.pressed) {
         if (ap->record->tap.count <= TAPPING_TOGGLE) {
-            register_mods(ap.mods);
+            register_mods(ap->mods);
         }
     }
     else {
         if (ap->record->tap.count < TAPPING_TOGGLE) {
-            unregister_mods(ap.mods);
+            unregister_mods(ap->mods);
         }
     }
 #endif
@@ -397,7 +397,7 @@ void ap_act_mods_tap_default(action_processor * ap) {
                 ap->debug_print("mods_tap: tap: cancel: add_mods\n");
                 // ad hoc: set 0 to cancel tap
                 ap->record->tap.count = 0;
-                register_mods(ap.mods);
+                register_mods(ap->mods);
             }
             else {
                 ap->debug_print("MODS_TAP: Tap: register_code\n");
@@ -406,7 +406,7 @@ void ap_act_mods_tap_default(action_processor * ap) {
         }
         else {
             ap->debug_print("MODS_TAP: No tap: add_mods\n");
-            register_mods(ap.mods);
+            register_mods(ap->mods);
         }
     }
     else {
@@ -422,7 +422,7 @@ void ap_act_mods_tap_default(action_processor * ap) {
         }
         else {
             ap->debug_print("MODS_TAP: No tap: add_mods\n");
-            unregister_mods(ap.mods);
+            unregister_mods(ap->mods);
         }
     }
 #endif
@@ -636,7 +636,7 @@ void ap_act_layer_tap_or_tap_ext_oneshot(action_processor * ap) {
     if (ap->action->kind.id != ACT_LAYER_TAP && ap->action->kind.id != ACT_LAYER_TAP_EXT) return;
     if (ap->action->layer_tap.code != OP_ONESHOT) return;
     // Oneshot modifier
-    if (!ap.oneshot_tap_toggle) {
+    if (!ap->oneshot_tap_toggle) {
         *(ap->do_release_oneshot) = false;
         if (ap->record->event.pressed) {
             del_mods(get_oneshot_locked_mods());
@@ -1024,35 +1024,35 @@ void ap_wait_ms(int arg) {
 }
 
 void ap_run(action_processor * ap) {
-    ap->act_mods(ap);
-    ap->act_mods_tap_oneshot(ap);
-    ap->act_mods_tap_toggle(ap);
-    ap->act_mods_tap_default(ap);
-    ap->act_usage_system(ap);
-    ap->act_usage_consumer(ap);
-    ap->act_mousekey(ap);
-    ap->act_layer_bitop_on(ap);
-    ap->act_layer_bitop_other(ap);
-    ap->act_layer_mods(ap);
-    ap->act_layer_tap_or_tap_ext_toggle(ap);
-    ap->act_layer_tap_or_tap_ext_on_off(ap);
-    ap->act_layer_tap_or_tap_ext_off_on(ap);
-    ap->act_layer_tap_or_tap_ext_set_clear(ap);
-    ap->act_layer_tap_or_tap_ext_oneshot(ap);
-    ap->act_layer_tap_or_tap_ext_default(ap);
-    ap->act_macro(ap);
-    ap->act_swap_hands_toggle(ap);
-    ap->act_swap_hands_on_off(ap);
-    ap->act_swap_hands_off_on(ap);
-    ap->act_swap_hands_on(ap);
-    ap->act_swap_hands_off(ap);
-    ap->act_swap_hands_oneshot(ap);
-    ap->act_swap_hands_tap_toggle(ap);
-    ap->act_swap_hands_default(ap);
-    ap->act_function(ap);
-    ap->layer_led(ap);
-    ap->retro_tapping(ap);
-    ap->oneshot_swaphands(ap);
+    ap_act_mods(ap);
+    ap_act_mods_tap_oneshot(ap);
+    ap_act_mods_tap_toggle(ap);
+    ap_act_mods_tap_default(ap);
+    ap_act_usage_system(ap);
+    ap_act_usage_consumer(ap);
+    ap_act_mousekey(ap);
+    ap_act_layer_bitop_on(ap);
+    ap_act_layer_bitop_other(ap);
+    ap_act_layer_mods(ap);
+    ap_act_layer_tap_or_tap_ext_toggle(ap);
+    ap_act_layer_tap_or_tap_ext_on_off(ap);
+    ap_act_layer_tap_or_tap_ext_off_on(ap);
+    ap_act_layer_tap_or_tap_ext_set_clear(ap);
+    ap_act_layer_tap_or_tap_ext_oneshot(ap);
+    ap_act_layer_tap_or_tap_ext_default(ap);
+    ap_act_macro(ap);
+    ap_act_swap_hands_toggle(ap);
+    ap_act_swap_hands_on_off(ap);
+    ap_act_swap_hands_off_on(ap);
+    ap_act_swap_hands_on(ap);
+    ap_act_swap_hands_off(ap);
+    ap_act_swap_hands_oneshot(ap);
+    ap_act_swap_hands_tap_toggle(ap);
+    ap_act_swap_hands_default(ap);
+    ap_act_function(ap);
+    ap_layer_led(ap);
+    ap_retro_tapping(ap);
+    ap_oneshot_swaphands(ap);
 }
 
 action_processor action_processor_init(keyrecord_t * record, action_t * action) {
@@ -1075,36 +1075,6 @@ action_processor action_processor_init(keyrecord_t * record, action_t * action) 
         ap.oneshot_tap_toggle = false;
     }
 #endif
-    ap.act_mods = ap_act_mods;
-    ap.act_mods_tap_oneshot = ap_act_mods_tap_oneshot;
-    ap.act_mods_tap_toggle = ap_act_mods_tap_toggle;
-    ap.act_mods_tap_default = ap_act_mods_tap_default;
-    ap.act_usage_system = ap_act_usage_system;
-    ap.act_usage_consumer = ap_act_usage_consumer;
-    ap.act_mousekey = ap_act_mousekey;
-    ap.act_layer_bitop_on = ap_act_layer_bitop_on;
-    ap.act_layer_bitop_other = ap_act_layer_bitop_other;
-    ap.act_layer_mods = ap_act_layer_mods;
-    ap.act_layer_tap_or_tap_ext_toggle = ap_act_layer_tap_or_tap_ext_toggle;
-    ap.act_layer_tap_or_tap_ext_on_off = ap_act_layer_tap_or_tap_ext_on_off;
-    ap.act_layer_tap_or_tap_ext_off_on = ap_act_layer_tap_or_tap_ext_off_on;
-    ap.act_layer_tap_or_tap_ext_set_clear = ap_act_layer_tap_or_tap_ext_set_clear;
-    ap.act_layer_tap_or_tap_ext_oneshot = ap_act_layer_tap_or_tap_ext_oneshot;
-    ap.act_layer_tap_or_tap_ext_default = ap_act_layer_tap_or_tap_ext_default;
-    ap.act_macro = ap_act_macro;
-    ap.act_swap_hands_toggle = ap_act_swap_hands_toggle;
-    ap.act_swap_hands_on_off = ap_act_swap_hands_on_off;
-    ap.act_swap_hands_off_on = ap_act_swap_hands_off_on;
-    ap.act_swap_hands_on = ap_act_swap_hands_on;
-    ap.act_swap_hands_off = ap_act_swap_hands_off;
-    ap.act_swap_hands_oneshot = ap_act_swap_hands_oneshot;
-    ap.act_swap_hands_tap_toggle = ap_act_swap_hands_tap_toggle;
-    ap.act_swap_hands_default = ap_act_swap_hands_default;
-    ap.act_function = ap_act_function;
-    ap.layer_led = ap_layer_led;
-    ap.retro_tapping = ap_retro_tapping;
-    ap.oneshot_swaphands = ap_oneshot_swaphands;
-    ap.release_oneshot = ap_release_oneshot;
     ap.debug_print = ap_debug_print;
     ap.wait_ms = ap_wait_ms;
     ap.run = ap_run;
@@ -1117,9 +1087,6 @@ action_processor action_processor_init(keyrecord_t * record, action_t * action) 
  */
 void process_action(keyrecord_t *record, action_t action) {
     keyevent_t event = record->event;
-#ifndef NO_ACTION_TAPPING
-    uint8_t tap_count = record->tap.count;
-#endif
 
 #ifndef NO_ACTION_ONESHOT
     bool do_release_oneshot = false;
@@ -1149,7 +1116,7 @@ void process_action(keyrecord_t *record, action_t action) {
 #elifdef RETRO_TAPPING_PER_KEY
     *(ap.retro_tapping_counter) = retro_tapping_counter;
 #endif
-    ap.run();
+    ap.run(&ap);
 }
 
 /** \brief Utilities for actions. (FIXME: Needs better description)
