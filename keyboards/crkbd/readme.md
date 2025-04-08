@@ -1,3 +1,12 @@
+# どのリビジョンを使用するか？ ( rules.mk の DEFAULT_FOLDER を使わずに済ませる方法 )
+ビルド時にキーボード名とリビジョンの指定を行う
+```sh
+qmk compile -kb crkbd/rev1 -km YuhichYOC
+```
+
+# レイヤーごとの色変え設定について
+RGB_MATRIX 機能はオーバースペックなので OFF にしている。RGBLIGHT 機能を使うよう rules.mk で指定する。
+
 # Corne Keyboard (CRKBD)
 
 ![Crkbd](https://user-images.githubusercontent.com/736191/40575636-6fba63a4-6123-11e8-9ca0-3f990f1f9f4c.jpg)
